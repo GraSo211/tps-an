@@ -27,7 +27,7 @@ b = max([nx nh ny])+2;
 figure('Name', 'TP1', 'NumberTitle', 'off');
 
 
-% Primer grafico
+% Primer Grafico
 subplot(3,1,1);
 stem(nx,x, 'r');
 legend('x[n]');
