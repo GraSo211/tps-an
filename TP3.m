@@ -5,27 +5,19 @@ Nx = 301;
 % Periodo de Muestreo
 dt = 0.0001;
 
-
-
 % Rango de Muestreo (Inicia en 0 y termina en La cantidad de muestras -1)
 % (Recordar que el 0 cuenta)
 t = 0:dt:(Nx-1)*dt;
 
 % x[n]
-
-
-x = 5*cos(2* pi *100*t) - 3*sin(2*pi*1500*t);
+x = -5*cos(2* pi *100*t) + 3*sin(2*pi*1500*t);
 n = 0:Nx-1;
 
 % Frecuencia de Corte
 Fc = 800;
 
-
-
 % Cantidad de Muestras
 Nh = 101;
-
-% dt es igual al usado en el muestreo
 
 % Valores no nulos del Vector
 M = (Nh-1)/2;
@@ -35,7 +27,7 @@ m = -M:M;
 h=2*Fc*dt*sinc(2*Fc*dt*m);
 
 
-% Calculamos el N ACLARAR MEJORQUIE ES EL N ASDFKJSFLASDJKLASDKLA JKKFLASDKLFASDFKLÑSAJFÑLKSAJKLJFSDJJ FASLÑJASDÑFFSDJL
+% Calculamos el N = 2^r para elegir el N adecuado lo comparamos con la suma de las longitudes de las 2 señales.
 for i=1:16
   if(2^i > Nx+Nh)
     N = 2^i
@@ -43,62 +35,115 @@ for i=1:16
   endif
 endfor
 
-disp(N)
-
 
 % y[n]
-% Calculamos X y H y luego multiplicamos y volvemos al tiempo
+% Calculamos X
 xN = [x,zeros(1,N-Nx)]
 X = fft(xN)
 
+% Calculamos H
 hN = [h, zeros(1,N-Nh)]
 H = fft(hN)
 
-Y = X .* H
-y = ifft(Y)
-% ny = ((n(1)+m(1)):(n(end)+m(end)));
 
-disp(['ola',num2str(length(X))])
-ny = length(X) + length(H)-1
-% Escalas
+
+% Producto Punto a Punto
+Y = X .* H
+
+% Antitransformada
+y = ifft(Y);
+ny = ((n(1)+m(1)):(n(end)+m(end)));
+
+% Longitudes de las señales en la frecuencia
+k = 0:(N-1);
+
+% Escalas del Tiempo
 a = min([n m ny]);
 b = max([n m ny]);
 
+% Escalas de la Frecuencia
+a = min([n m ny]);
+b = max([n m ny]);
+
+% Escalas de la Frecuencia
+c = 0
+d = N-1
+
 
 % Graficos
-figure('Name', 'TP2', 'NumberTitle', 'off');
+figure('Name', 'TP3', 'NumberTitle', 'off');
 
 
 % Primer Grafico
-subplot(3,1,1);
+subplot(3,2,1);
 stem(n, x, 'r');
-legend('x[n]');
-title('Señal de entrada discreta x[n]');
+legend('x');
+title('Señal de Entrada x[n]');
 set(gca, 'FontSize', 12);
 xlabel('n');
-ylabel('x[n]');
+ylabel('Amplitud');
 grid on;
 xlim([a,b])
 
+
 % Segundo Grafico
-subplot(3,1,2);
-stem(m, h, 'b');
-legend('h[n]');
-title('Respuesta al impulso h[n]');
+subplot(3,2,2);
+stem(k, abs(X), 'r');
+legend('X');
+title('Modulo de X(f)');
 set(gca, 'FontSize', 12);
-xlabel('n');
-ylabel('h[n]');
+xlabel('k');
+ylabel('Amplitud');
 grid on;
-xlim([a,b])
+xlim([c, d]);
 
 
 % Tercer Grafico
-subplot(3,1,3);
-stem(n, y, 'm');
-legend('y[n] = x[n] * h[n]');
-title('Salida del sistema y[n] = x[n] * h[n]');
+subplot(3,2,3);
+stem(m, h, 'b');
+legend('h');
+title('Respuesta al impulso h[n]');
 set(gca, 'FontSize', 12);
 xlabel('n');
-ylabel('y[n]');
+ylabel('Amplitud');
 grid on;
 xlim([a,b])
+
+% Cuarto Grafico
+subplot(3,2,4);
+stem(k, abs(H), 'b');
+legend('H');
+title('Modulo de H(f)');
+set(gca, 'FontSize', 12);
+xlabel('k');
+ylabel('Amplitud');
+xlim([c, d]);
+grid on;
+
+
+
+% Quinto Grafico
+subplot(3,2,5);
+stem(ny, y(1:length(ny)), 'm');
+legend('y');
+title('Señal de Salida y[n]');
+set(gca, 'FontSize', 12);
+xlabel('n');
+ylabel('Amplitud');
+grid on;
+xlim([a,b])
+
+% Sexto Grafico
+subplot(3,2,6);
+stem(k, abs(Y), 'm');
+legend('Y');
+title('Modulo de Y(f)');
+set(gca, 'FontSize', 12);
+xlabel('k');
+ylabel('Amplitud');
+xlim([c, d]);
+grid on;
+
+
+
+
