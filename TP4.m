@@ -83,12 +83,9 @@ ny_transf = ((n(1)+m(1)):(n(end)+m(end)));
 k = 0:(N-1);
 
 % Escalas del Tiempo
-a = min([n m ny]);
-b = max([n m ny]);
+a = min([n m ny_conv]);
+b = max([n m ny_conv]);
 
-% Escalas de la Frecuencia
-a = min([n m ny]);
-b = max([n m ny]);
 
 % Escalas de la Frecuencia
 c = 0
@@ -172,7 +169,7 @@ grid on;
 
 % Septimo Grafico
 subplot(4,2,7);
-stem(ny_transf, y_transf(1:length(ny)), 'm');
+stem(ny_transf, y_transf(1:length(ny_conv)), 'm');
 legend('|Y[k]| = X[k] .* H[k]');
 title('Señal de Salida y[n] por convolucion FFT');
 set(gca, 'FontSize', 12);
